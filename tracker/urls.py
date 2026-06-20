@@ -10,6 +10,7 @@ router.register('interviewapi', views.InterviewModelViewSet, basename = 'intervi
 router.register('contactapi', views.ContactModelViewSet, basename = 'contact')
 
 urlpatterns = [
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('login/', views.login_api),
 
 ]
