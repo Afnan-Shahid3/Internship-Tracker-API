@@ -47,7 +47,7 @@ class CompanyModelViewSet(viewsets.ModelViewSet):
     serializer_class = CompanySerializer
     
     def get_queryset(self):
-        return Company.objects.filter(user = self.request.user.id)
+        return Company.objects.filter(user = self.request.user)
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -60,10 +60,10 @@ class CompanyModelViewSet(viewsets.ModelViewSet):
 class InterviewModelViewSet(viewsets.ModelViewSet):
     serializer_class = InterviewSerializer
     def get_queryset(self):
-        return Interview.objects.filter(user = self.request.user)
+        return Interview.objects.filter(application__company__user = self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save()
 
     pagination_class = StandardPagination
 
@@ -72,10 +72,10 @@ class InterviewModelViewSet(viewsets.ModelViewSet):
 class ApplicationModelViewSet(viewsets.ModelViewSet):
     serializer_class = ApplicationSerializer
     def get_queryset(self):
-        return Application.objects.filter(user = self.request.user)
+        return Application.objects.filter(company__user = self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save()
 
 
     pagination_class = StandardPagination
@@ -86,11 +86,11 @@ class ApplicationModelViewSet(viewsets.ModelViewSet):
 class ContactModelViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
     def get_queryset(self):
-        return Contact.objects.filter(user = self.request.user)
+        return Contact.objects.filter(company__user = self.request.user)
 
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save()
 
         
     pagination_class = StandardPagination

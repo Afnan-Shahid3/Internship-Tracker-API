@@ -8,11 +8,6 @@ class CompanySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'website', 'location', 'created_at']
 
 
-class ApplicationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Application
-        fields = ['id', 'company', 'position', 'date_applied', 'status', 'notes']
-
 
 class InterviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,3 +19,18 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = ['id', 'company', 'name', 'role', 'email', 'linkedin']
+
+
+class ApplicationSerializer(serializers.ModelSerializer):
+    company = CompanySerializer(read_only= True)
+    interview = InterviewSerializer(many = True, read_only= True)
+    contacts = serializers.SerializerMethodField()
+    class Meta:
+        model = Application
+        fields = ['id', 'position', 'date_applied', 'status', 'notes','company', 'interview', 'contacts']
+
+    def get_contacts(self, obj):
+        return ContactSerializer(
+            obj.company.contacts.all(),
+            many=True
+        ).data
